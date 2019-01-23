@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from . import forms
 from django.views.generic import CreateView, TemplateView
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, views
 
 class SignUp(CreateView):
     form_class = forms.UserCreateForm
@@ -30,10 +30,9 @@ def login_user_teacher(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
-                login(request, user)
+                views.login(request, user)
                 return redirect('dash')
-    return render('attendance_app/login.html', request, context={'form': forms.TeacherLoginForm})
+    return render(request, 'attendance_app/login.html', context={'form': forms.TeacherLoginForm})
 
 class Dash(TemplateView):
     template_name = 'attendance_app/login_success.html'
-
